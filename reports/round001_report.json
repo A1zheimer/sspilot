@@ -1,0 +1,24 @@
+{
+  "round_id": 1,
+  "total_traces": 40,
+  "scored_traces": 40,
+  "avg_score": 30.65,
+  "grade_distribution": {
+    "A": 30,
+    "S": 5,
+    "B": 1,
+    "C": 4
+  },
+  "vuln_distribution": {
+    "sqli": 5,
+    "xss": 5,
+    "path_traversal": 5,
+    "hardcoded_secret": 5,
+    "ssrf": 5,
+    "unsafe_deser": 5,
+    "logic": 5,
+    "info_leak": 5
+  },
+  "trace_path": "/home/xsuper/sspilot/traces/battle_round001_20260401_113240.jsonl",
+  "total_duration_sec": 0.0
+}

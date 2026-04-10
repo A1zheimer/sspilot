@@ -1,0 +1,17 @@
+{
+  "round_id": 2,
+  "timestamp": "2026-04-01T12:06:17.751377",
+  "stage1": {
+    "sample_count": 40
+  },
+  "stage2": {
+    "total": 40,
+    "scored": 40,
+    "avg_score": 31.05
+  },
+  "stage3": {
+    "skipped": true,
+    "reason": "skip_train_flag"
+  },
+  "total_duration_sec": 5283.9
+}

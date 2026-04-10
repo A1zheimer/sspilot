@@ -1,0 +1,70 @@
+# SSPilot — NeMo SFT LoRA 训练配置
+# 目标模型: nemotron-3-nano-30b-a3b (FP16)
+# 硬件: DGX Spark GB10, 119GB unified memory
+
+trainer:
+  devices: 1
+  num_nodes: 1
+  accelerator: gpu
+  precision: 16
+  max_epochs: 3
+  max_steps: -1  # -1 表示由 epoch 控制
+  val_check_interval: 0.25
+  log_every_n_steps: 10
+  gradient_clip_val: 1.0
+  accumulate_grad_batches: 4
+
+model:
+  restore_from_path: /home/xsuper/models/nemotron-3-nano-30b-a3b
+  
+  # LoRA PEFT 配置
+  peft:
+    peft_scheme: lora
+    lora_tuning:
+      adapter_dim: 16
+      adapter_dropout: 0.05
+      column_init_method: xavier
+      row_init_method: zero
+      target_modules:
+        - q_proj
+        - v_proj
+        - k_proj
+        - o_proj
+
+  # 数据配置
+  data:
+    train_ds:
+      file_path: null  # 运行时指定
+      micro_batch_size: 1
+      global_batch_size: 8
+      max_seq_length: 4096
+      shuffle: true
+      num_workers: 2
+      pin_memory: true
+      concat_sampling_probabilities: [1.0]
+    
+    validation_ds:
+      file_path: null
+      micro_batch_size: 1
+      global_batch_size: 8
+      max_seq_length: 4096
+
+  # 优化器
+  optim:
+    name: fused_adam
+    lr: 2.0e-4
+    weight_decay: 0.01
+    betas: [0.9, 0.98]
+    sched:
+      name: CosineAnnealing
+      warmup_steps: 50
+      min_lr: 1.0e-6
+      constant_steps: 0
+
+exp_manager:
+  exp_dir: /home/xsuper/sspilot/checkpoints/sft
+  name: sspilot_sft
+  create_wandb_logger: false
+  create_tensorboard_logger: true
+  resume_if_exists: true
+  resume_ignore_no_checkpoint: true

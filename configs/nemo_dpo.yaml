@@ -1,0 +1,76 @@
+# SSPilot — NeMo DPO LoRA 训练配置
+# 目标模型: nemotron-3-nano-30b-a3b (已经过 SFT)
+# 硬件: DGX Spark GB10, 119GB unified memory
+
+trainer:
+  devices: 1
+  num_nodes: 1
+  accelerator: gpu
+  precision: 16
+  max_epochs: 1
+  max_steps: -1
+  val_check_interval: 0.5
+  log_every_n_steps: 5
+  gradient_clip_val: 1.0
+  accumulate_grad_batches: 4
+
+model:
+  restore_from_path: null  # 运行时指定 (SFT checkpoint)
+  
+  # DPO 配置
+  dpo:
+    beta: 0.1  # DPO temperature
+    reference_free: false
+    loss_type: sigmoid  # sigmoid | hinge | ipo
+    label_smoothing: 0.0
+
+  # LoRA PEFT 配置 (与 SFT 一致)
+  peft:
+    peft_scheme: lora
+    lora_tuning:
+      adapter_dim: 16
+      adapter_dropout: 0.05
+      column_init_method: xavier
+      row_init_method: zero
+      target_modules:
+        - q_proj
+        - v_proj
+        - k_proj
+        - o_proj
+
+  # 数据配置
+  data:
+    train_ds:
+      file_path: null  # 运行时指定
+      micro_batch_size: 1
+      global_batch_size: 4
+      max_seq_length: 4096
+      shuffle: true
+      num_workers: 2
+      pin_memory: true
+    
+    validation_ds:
+      file_path: null
+      micro_batch_size: 1
+      global_batch_size: 4
+      max_seq_length: 4096
+
+  # 优化器 (DPO 用更小学习率)
+  optim:
+    name: fused_adam
+    lr: 5.0e-5
+    weight_decay: 0.01
+    betas: [0.9, 0.98]
+    sched:
+      name: CosineAnnealing
+      warmup_steps: 20
+      min_lr: 1.0e-7
+      constant_steps: 0
+
+exp_manager:
+  exp_dir: /home/xsuper/sspilot/checkpoints/dpo
+  name: sspilot_dpo
+  create_wandb_logger: false
+  create_tensorboard_logger: true
+  resume_if_exists: true
+  resume_ignore_no_checkpoint: true

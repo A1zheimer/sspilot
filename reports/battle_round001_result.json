@@ -1,0 +1,17 @@
+{
+  "round_id": 1,
+  "timestamp": "2026-04-01T09:58:38.051096",
+  "stage1": {
+    "sample_count": 40
+  },
+  "stage2": {
+    "total": 40,
+    "scored": 40,
+    "avg_score": 30.65
+  },
+  "stage3": {
+    "skipped": true,
+    "reason": "first_round"
+  },
+  "total_duration_sec": 5642.8
+}

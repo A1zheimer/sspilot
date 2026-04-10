@@ -1,0 +1,52 @@
+# 模型权重（太大不上传）
+*.safetensors
+*.bin
+*.pt
+*.gguf
+*.ggml
+
+# LoRA checkpoints（太大不上传，训练时自动生成）
+checkpoints/
+
+# 本地模型目录
+models/
+
+# 缓存
+__pycache__/
+*.pyc
+.cache/
+*.egg-info/
+
+# 日志和临时文件
+*.log
+_tmp_*.py
+nohup.out
+logs/
+
+# 备份和诊断文件
+*.bak
+*.bak.*
+*.pre_vllm_bak
+diag_*.json
+
+# 打包文件
+*.tar.gz
+
+# 中间结果
+scripts/round1_stage*.json
+
+# 零散数据集片段（保留 datasets/ 下主数据即可）
+scripts/datasets/
+
+# 报告/脚本中的纯文本日志
+reports/*.txt
+scripts/*.txt
+
+# Demo server（含 offline fallback 逻辑，不纳入仓库）
+demo/
+start_demo.sh
+
+# 系统文件
+.DS_Store
+*.swp
+*.swo
